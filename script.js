@@ -9,6 +9,7 @@ const equalsButton = document.querySelector(".equals");
 const clearButton = document.querySelector(".clear");
 let justEvaluated = false;
 const decimalButton = document.querySelector(".decimal");
+const backspaceButton = document.querySelector(".backspace");
 
 function add(a, b) {
     return a + b;
@@ -152,3 +153,19 @@ function appendDeciman() {
 }
 
 decimalButton.addEventListener("click", appendDeciman);
+
+
+function backspace(){
+    if(justEvaluated && operator === ""){
+        justEvaluated = false;
+    }
+
+    if(operator === ""){
+        firstNumber = firstNumber.slice(0,-1);
+        updateDisplay(firstNumber);
+    }else{
+        secondNumber = secondNumber.slice(0,-1);
+        updateDisplay(secondNumber);
+    }
+}
+backspaceButton.addEventListener("click", backspace);
