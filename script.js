@@ -8,6 +8,8 @@ const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector(".equals");
 const clearButton = document.querySelector(".clear");
 
+let justEvaluated = false;
+
 function add(a, b) {
     return a + b;
 }
@@ -48,6 +50,14 @@ function updateDisplay(value) {
 
 digitButtons.forEach(button => {
     button.addEventListener("click", () => {
+
+        if (justEvaluated) {
+            firstNumber = "";
+            operator = "";
+            secondNumber = "";
+            justEvaluated = false;
+        }
+
         if (operator === "") {
             firstNumber += button.textContent;
             updateDisplay(firstNumber);
@@ -60,27 +70,53 @@ digitButtons.forEach(button => {
 
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
+        const newOP = button.textContent;
+
         if (firstNumber === "")
             return;
-        operator = button.textContent;
+        if(operator !== "" && secondNumber === ""){
+            operator = newOP;
+            return;
+        }
+
+        if(operator !== "" && secondNumber !== ""){
+            let result = operateCalc(firstNumber, operator, secondNumber);
+            result = formatResult(result);
+
+            firstNumber = String(result);
+            secondNumber = "";
+            updateDisplay(firstNumber);
+        }
+        operator = newOP;
+        justEvaluated = false;
     })
 })
 
 equalsButton.addEventListener("click", () => {
     if (firstNumber === "" || operator === "" || secondNumber === "")
         return;
-    const result = operateCalc(firstNumber, operator, secondNumber);
-
+    let result = operateCalc(firstNumber, operator, secondNumber);
+    result = formatResult(result);
     updateDisplay(String(result));
 
     firstNumber = String(result);
     operate = "";
     secondNumber = "";
+    justEvaluated = true;
 });
 
 clearButton.addEventListener("click", () => {
     firstNumber = "";
     operate = "";
     secondNumber = "";
+    justEvaluated = false;
     updateDisplay("0");
 })
+
+function formatResult(value) {
+    if (typeof value === "string")
+        return value;
+    if (!Number.isFinite(value))
+        return "Error";
+    return Math.round(value * 100000000) / 100000000;
+}
