@@ -169,3 +169,55 @@ function backspace(){
     }
 }
 backspaceButton.addEventListener("click", backspace);
+
+document.addEventListener("keydown", (e) => {
+  const key = e.key;
+
+  // Digits 0-9
+  if (key >= "0" && key <= "9") {
+    const btn = document.querySelector(`.digit:nth-child(n)`);
+    // najpouzdanije: nađi dugme po textContent
+    const digitBtn = [...document.querySelectorAll(".digit")]
+      .find(b => b.textContent === key);
+    if (digitBtn) digitBtn.click();
+    return;
+  }
+
+  // Decimal
+  if (key === ".") {
+    const decBtn = document.querySelector(".decimal");
+    if (decBtn) decBtn.click();
+    return;
+  }
+
+  // Operators
+  if (key === "+" || key === "-" || key === "*" || key === "/") {
+    const opBtn = [...document.querySelectorAll(".operator")]
+      .find(b => b.textContent === key);
+    if (opBtn) opBtn.click();
+    return;
+  }
+
+  // Equals: Enter or =
+  if (key === "Enter" || key === "=") {
+    e.preventDefault(); // da ne klikne default button ili submit
+    const eqBtn = document.querySelector(".equals");
+    if (eqBtn) eqBtn.click();
+    return;
+  }
+
+  // Backspace
+  if (key === "Backspace") {
+    e.preventDefault();
+    const bsBtn = document.querySelector(".backspace");
+    if (bsBtn) bsBtn.click();
+    return;
+  }
+
+  // Clear: Escape or c/C
+  if (key === "Escape" || key === "c" || key === "C") {
+    const clrBtn = document.querySelector(".clear");
+    if (clrBtn) clrBtn.click();
+    return;
+  }
+});
