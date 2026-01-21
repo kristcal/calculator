@@ -7,8 +7,8 @@ const digitButtons = document.querySelectorAll(".digit");
 const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector(".equals");
 const clearButton = document.querySelector(".clear");
-
 let justEvaluated = false;
+const decimalButton = document.querySelector(".decimal");
 
 function add(a, b) {
     return a + b;
@@ -46,12 +46,14 @@ function updateDisplay(value) {
     } else {
         display.textContent = value;
     }
+    updateDecimalButtonsState();
 }
+updateDisplay("0");
 
 digitButtons.forEach(button => {
     button.addEventListener("click", () => {
 
-        if (justEvaluated) {
+        if (justEvaluated && operator === "") {
             firstNumber = "";
             operator = "";
             secondNumber = "";
@@ -74,12 +76,12 @@ operatorButtons.forEach(button => {
 
         if (firstNumber === "")
             return;
-        if(operator !== "" && secondNumber === ""){
+        if (operator !== "" && secondNumber === "") {
             operator = newOP;
             return;
         }
 
-        if(operator !== "" && secondNumber !== ""){
+        if (operator !== "" && secondNumber !== "") {
             let result = operateCalc(firstNumber, operator, secondNumber);
             result = formatResult(result);
 
@@ -120,3 +122,33 @@ function formatResult(value) {
         return "Error";
     return Math.round(value * 100000000) / 100000000;
 }
+
+function updateDecimalButtonsState(){
+    const current = operator === "" ? firstNumber : secondNumber;
+    decimalButton.disabled = current.includes(".");
+}
+
+function appendDeciman() {
+    if (justEvaluated) {
+        firstNumber = "";
+        operate = "";
+        secondNumber = "";
+        justEvaluated = false;
+    }
+
+    if(operator === ""){
+        if(firstNumber.includes("."))
+            return;
+        firstNumber = firstNumber === "" ? "0." : firstNumber+".";
+        updateDisplay(firstNumber);
+    }else{
+        if(secondNumber.includes("."))
+            return
+        secondNumber = secondNumber === "" ? "0." : secondNumber + ".";
+        updateDisplay(secondNumber);
+    }
+    updateDecimalButtonsState();
+
+}
+
+decimalButton.addEventListener("click", appendDeciman);
